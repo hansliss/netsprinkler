@@ -101,8 +101,10 @@ int main(int argc, char *argv[]) {
   while (1) {
     reslen = sizeof(res);
     datalen = recvfrom(sockfd, buf, sizeof(buf), MSG_WAITALL, (struct sockaddr *)&res, &reslen);
-    for (int i=0; i<ndest; i++) {
-      sendto(sockfd, buf, datalen, MSG_CONFIRM, send_ai[i]->ai_addr, sizeof(struct addrinfo));
+    if (datalen >= 0) {
+      for (int i=0; i<ndest; i++) {
+	sendto(sockfd, buf, datalen, MSG_CONFIRM, send_ai[i]->ai_addr, send_ai[i]->ai_addrlen);
+      }
     }
   }
   return 0;
